@@ -1,0 +1,48 @@
+1) First of all have NodeJS installed on the computer i.e google nodejs and install it.
+
+2) Once you have installed it create a folder and store the files "full.js", "package-lock.json" and "package.json" inside it.
+
+3) Open up command prompt and go to the folder you saved the files in.
+
+4) Run the command "npm install", this will take a bit for it to install all the dependencies.
+
+5)Inside the folder go to node_modules/ethers/providers and open networks.json in a text editor ex. notepad/vscode what ever you want to use.
+
+6) Add the following lines of code right underneath the kovan network in the file: 
+"avaxmain": {
+        "chainId": 43114,
+        "name": "avaxmain"
+    },
+
+7) Now save that file, now proceed to open full.js in here are all your specifications on what price to sell at, how often to check price etc.
+
+The main variables to look at are: myAddress, privateKey, gasPrice, mySDOG, MinimumOut and target.
+
+8) myAddress and privateKey are straight forward these represent your avax address and privatekey.
+
+9) gasPrice determines how much gas you will like to pay for the transaction by default it is set at 1150 nAVAX but you can adjust this.
+
+10)mySDOG - This is the amount of SDOG you wish to sell by default it is set to 1 SDOG but you can adjust this as you see fit.
+
+CAUTION: Take a close look at the decimals and ensure it is correct.
+If you want to sell 10 SDOG it is 10 * 10^9
+
+11) MinimumOut is the lowest amount of mim you want in return for your sdog.
+This is not the amount per sdog but the amount for all your sdog.
+
+So if you wish to sell 5 sdog and want to sell all for atleast 5,000 MIM each the MinimumOut would be i.e 25000000000000000000000 or 25,000 MIM minimum back.
+
+This number is 5*5 = 25
+25 * 10^18 = 25000000000000000000000
+
+Note: If the sell does not net you atleast the minimumout it will fail and be reverted so be conservative with the number.
+
+12)Another variable you can adjust is how often it checks the price by default is 0.5 seconds but you can adjust this even lower.
+
+13) The last variable to change is target, this is the price of sdog do you wish to send the sell transaction at.
+
+So if you want when the price of sdog goes over 5000 MIM to send a sell transaction just set the target to 5000.
+
+14) Once you have set all the variables save the file and go back to command prompt.
+
+15) move to the folder where you store full.js and run node full.js. This should immediately start sending out messages on the current price of SDOG and you can place this is the background and keep it running.
