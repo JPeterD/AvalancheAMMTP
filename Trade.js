@@ -12,50 +12,51 @@ var privateKey = ''; // Wallet Private Key
 
 var wallet = new ethers.Wallet(privateKey,provider);
 
+// Replace the following 2 addresses with the token addresses of the tokens you would like to exchange
 var MIMAddress = "130966628846bfd36ff31a822705796e8cb8c18d";
-var SDOGAddress = "de9e52f1838951e4d2bb6c59723b003c353979b6";
+var coin1Address = "de9e52f1838951e4d2bb6c59723b003c353979b6";
 
 var contractWrite = new ethers.Contract(contractAddress,abi,wallet);
 var contractCall = new ethers.Contract(contractAddress,abi,provider);
 
-var path = [SDOGAddress, MIMAddress]; // Swap path converting sdog to MIM
+var path = [coin1Address, MIMAddress]; // This is the swap path the router will go through
 
 let overrides = {
     // How much avax to send
-    gasPrice: 1150000000000 // 1150 nAVAX fee ~0.152 AVAX fee
+    gasPrice: 1150000000000 // 1150 nAVAX fee ~0.115 AVAX fee
 };
 
-var SDOGAmount = "1000000000"; // 1 SDOG
+var coin1Amount = ""; // Set this to the denomination you would like ex. you would like to display ex. "1 coin is $1000 right now" Can change 1 to 10 or anything
 
-var mySDOG = "500000000000"; // 0.05 SDOG
-var MinimumOut = "500000000000000000000"; // How much MIM minimum you want in exchange for your SDOG ex. 500 MIM
+var swapAmount = ""; // How much coin you would like to swap
+var MinimumOut = ""; // How much you would like at a minimum this is denominated in your output currency. So if your selling 1 AVAX you would set a minimum to 50 USDC for example
 var deadline = "1637416267050"; // amount of time before swap fails no need to change
 
-var sdogprice = 1000; // No need to change
+var coinPrice; // No need to change
 
 var interval = setInterval(getPrice, 500); // 0.5 second intervals
 
-var target = 10000;
+var target = 10000; // Ensure your coin decimals are right and this is where you would set your target denominated in your output currency
 
 // This function is what monitors the price on chain
 function getPrice(){
     var callPromise = contractCall.getAmountsOut(SDOGAmount, path);
     
     callPromise.then(function(result){
-        sdogprice = result[1] / 10**18;
-        console.log('\n' +"Quote: " + (result[0] / 10**9).toString()+ " SDOG is only $" + sdogprice);
+        coinPrice = result[1] / 10**18;
+        console.log('\n' +"Quote: " + (result[0] / 10**18).toString()+ " SDOG is only $" + coinPrice); // Replace 10**9 with how many decimals your coin has typically its 18
     });
 
     //Checks if target price is reached and calls the sell function
-    if(sdogprice > target) {
-        sellSDOG();
+    if(coinPrice > target) {
+        sellCoin();
         clearInterval(interval);
     }
 }
 
 // This function sells the asset
-function sellSDOG() {
-    var sendPromise = contractWrite.swapExactTokensForTokens(mySDOG, MinimumOut, path, myAddress, deadline, overrides);
+function sellCoin() {
+    var sendPromise = contractWrite.swapExactTokensForTokens(swapAmount, MinimumOut, path, myAddress, deadline, overrides);
     sendPromise.then(function(result) {
         console.log(result);
     });
