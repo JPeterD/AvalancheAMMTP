@@ -40,11 +40,11 @@ var target = 10000; // Ensure your coin decimals are right and this is where you
 
 // This function is what monitors the price on chain
 function getPrice(){
-    var callPromise = contractCall.getAmountsOut(SDOGAmount, path);
+    var callPromise = contractCall.getAmountsOut(swapAmount, path);
     
     callPromise.then(function(result){
         coinPrice = result[1] / 10**18;
-        console.log('\n' +"Quote: " + (result[0] / 10**18).toString()+ " SDOG is only $" + coinPrice); // Replace 10**9 with how many decimals your coin has typically its 18
+        console.log('\n' +"Quote: " + (result[0] / 10**18).toString()+ " Coin is only $" + coinPrice); // Replace 10**9 with how many decimals your coin has typically its 18
     });
 
     //Checks if target price is reached and calls the sell function
